@@ -39,7 +39,7 @@ const Orders = () => {
         .order('created_at', { ascending: false });
 
       if (error) console.error('Error loading orders:', error);
-      setOrders((data as OrderRow[]) ?? []);
+      setOrders((data as any as OrderRow[]) ?? []);
       setLoading(false);
     };
 

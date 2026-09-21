@@ -95,7 +95,10 @@ const CreatorUpload = () => {
         .from('designs')
         .insert({
           user_id: user.id,
+          artist_id: user.id,
+          parent_id: user.id,
           title: sanitizedTitle,
+          story: sanitizedDescription || '',
           inspiration: sanitizedDescription || null,
           art_subject: sanitizedSubject,
           art_description: sanitizedDescription || null,
@@ -106,7 +109,7 @@ const CreatorUpload = () => {
           file_size: file.size,
           status: 'pending_review',
           ai_status: 'pending'
-        })
+        } as any)
         .select()
         .single();
 

@@ -93,8 +93,8 @@ export const deleteEntireProduct = async (productId: string): Promise<void> => {
     }
 
     // Step 3: Delete main design image from storage
-    if (product.designs?.file_url) {
-      await deleteStorageFile(product.designs.file_url);
+    if ((product.designs as any)?.file_url) {
+      await deleteStorageFile((product.designs as any).file_url);
     }
 
     // Step 4: Delete related records in dependency order

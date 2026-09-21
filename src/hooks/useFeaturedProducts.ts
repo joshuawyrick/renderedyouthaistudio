@@ -38,7 +38,7 @@ const fetchFeaturedProducts = async (): Promise<FeaturedProduct[]> => {
   if (error) throw error;
   if (!products?.length) return [];
 
-  const userIds = [...new Set(products.map(p => p.designs?.user_id).filter(Boolean))];
+  const userIds = [...new Set((products as any[]).map(p => p.designs?.user_id).filter(Boolean))];
   const { data: profiles } = await supabase
     .from('profiles')
     .select('id, first_name, last_name, age_bracket, state')

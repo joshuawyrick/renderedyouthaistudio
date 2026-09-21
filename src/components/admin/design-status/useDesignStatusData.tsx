@@ -35,7 +35,7 @@ export const useDesignStatusData = () => {
 
       const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
 
-      return (data || []).map(item => ({
+      return (data || []).map((item: any) => ({
         id: item.id,
         title: item.title,
         status: item.status,

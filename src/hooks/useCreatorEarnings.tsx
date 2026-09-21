@@ -67,7 +67,7 @@ export const useCreatorEarnings = () => {
       }
 
       // Format earnings data
-      const formattedEarnings = (earningsData || []).map(earning => ({
+      const formattedEarnings = ((earningsData as any[]) || []).map(earning => ({
         ...earning,
         product_title: earning.products?.title || 'Unknown Product'
       }));

@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Studio, { StudioProvider } from './features/studio/Studio';
 import { CartProvider } from "@/contexts/CartContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 // Eagerly load the landing page for fast first paint
 import Index from "./pages/Index";
@@ -51,6 +52,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <AuthProvider>
         <CartProvider>
         <StudioProvider><Suspense fallback={<PageLoader />}>
           <Routes>
@@ -89,6 +91,7 @@ const App = () => (
           </Routes>
         </Suspense></StudioProvider>
         </CartProvider>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

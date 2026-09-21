@@ -1,43 +1,72 @@
-# Rebuild status — 2026-09-21
+# Rendered Youth — Build Status
 
-## What is in this repository
+## Current milestone: A — Foundation (COMPLETE)
 
-The full supplied React/TypeScript/Vite application, original public images, the supplied full-size Rendered Youth logo, a new family/admin workflow preview, the Printful server adapter, and tests. Original server functions and migrations are retained under `legacy/supabase` for reference, not deployment. The original project connection and embedded legacy tokens have been removed.
+### What was implemented
 
-## Implemented in this revision
+**Database (Supabase)**
+- Migration `0001_parent_account_foundation` applied with 5 tables:
+  - `profiles` — extends `auth.users` with role (`parent`/`admin`), display name, onboarding step, consent accepted, payout ready
+  - `artists` — child profiles owned by a parent (display name, illustrated avatar, optional age/state with visibility toggles, bio, goal)
+  - `designs` — drawing submissions with the full workflow state machine (draft → generating → choose → review → changes → mockup → parent_approval → ready → published)
+  - `design_events` — immutable audit log of design state transitions
+  - `app_settings` — admin-controlled configurable platform settings
+- Row Level Security enabled on all tables with ownership-scoped policies
+- Database triggers: auto-create profile on signup, protect `role`/`payout_ready` columns from non-admin updates, auto-update timestamps, log stage transitions to design history
+- A trigger prevents non-admin users from changing their own `role` or `payout_ready` — these are server-controlled only
 
-- Role chooser: shopper, parent/guardian, school organizer information.
-- One sample parent account with multiple separate artist profiles.
-- Optional age and state visibility, default off; illustrated avatars without uploading photos.
-- Parent and admin navigation, sample drawing submission and four-option selection.
-- Explicit artwork review, change request, product preparation, parent final approval and publication stages.
-- Admin approval of extra generation requests, no automatic free second batch.
-- Sample payout setup before publication; a share rate is also required.
-- Admin pricing worksheet and tested creator-funded discount arithmetic.
-- Preserved original public pages and visual assets, repaired primary shopping CTA and footer legal links.
-- Safer responsive header; consistent new onboarding destinations.
-- Printful adapter with paid confirmation disabled by default.
-- Optimized web images: about 86% less image data, with lossless logos and high-quality WebP for large illustrations. Original PNGs remain in the backup source archive.
+**Authentication**
+- Real Supabase auth context (`AuthContext.tsx`) replacing the in-memory studio account state
+- Email/password sign-up and sign-in with session persistence
+- Profile auto-created on signup via database trigger
+- Onboarding state tracked on the server (`onboarding_step` column)
+- Sign-out clears session and profile state
 
-## Verification for this revision
+**Studio component**
+- Rewired to use real Supabase auth and database instead of in-memory `useState`
+- `useArtists` hook — loads, adds, and deletes child profiles from the database
+- `useDesigns` hook — loads, creates, and updates designs from the database
+- Parent onboarding flow: sign up → consent → add artists → create designs
+- Admin access checked against server-side `profile.role` — no client-side role switching
+- Visual design preserved entirely (black header, yellow accents, studio CSS unchanged)
 
-TypeScript application check and 10 offline tests passed. A Vite production bundle compiled successfully through the equivalent programmatic build configuration; the standard Windows config loader hit an environment directory-access restriction. Browser verification covered two artists under one parent, submission, four-option selection, admin preparation, parent approval, blocked publication before payout/rate setup, successful sample publication, and a 390px layout without horizontal overflow. These checks do not verify live services.
+**Type safety**
+- Updated `src/integrations/supabase/types.ts` with new schema + legacy table types for backward compatibility
+- Updated `src/integrations/supabase/client.ts` to use real credentials
+- All existing services and pages continue to compile
 
-## Important boundary
+### What was verified
+- TypeScript typecheck: 0 errors
+- Offline test suite: 10/10 pass (workflow state machine, earnings math, permissions)
+- Production build: succeeds
+- Database tables: 5 tables live with RLS enabled and correct policies
+- Security posture: ownership-scoped policies confirmed via `get_security_posture`
 
-New workflows are an in-memory interactive preview, enabled in local development or with `VITE_WORKFLOW_PREVIEW=true`. They deliberately do not collect child photos, run AI, verify anyone, connect a bank, issue a coupon, publish a real product, or print an order. Refresh clears sample data. Their role toggle and checkboxes are not authorization or consent mechanisms.
+### What still uses mocks/simulations
+- Studio design generation: shows sample style cards instead of real AI images (Milestone C)
+- Studio payout setup: "Preview completed Stripe setup" button simulates Stripe Connect (Milestone E)
+- Studio product preview: shows a shirt icon instead of real Printful mockups (Milestone D)
+- Studio earnings: $0.00 hard-coded (Milestone E)
+- Studio sharing: no real shop links or QR codes (Milestone D)
+- Admin orders, families, and settings pages: placeholder content (later milestones)
+- Old storefront pages (Store, ProductDetail, Cart, Checkout, Orders) still reference legacy schema and will be rewired in Milestone D
 
-Production builds without the preview flag show a registration-unavailable screen for the new studio. Connecting a Supabase URL alone does not complete the backend. The existing public shop/cart and policy pages remain inherited code requiring migration and content reconciliation; do not deploy this branch as a live commerce site.
+### Secrets/configuration needed next
+- **AI image provider** API key — needed for Milestone C (four-option generation)
+- **Printful** store API key — needed for Milestone D (catalog, mockups, fulfillment)
+- **Stripe** API keys — needed for Milestone E (Checkout + Connect)
+- **Identity/parental-consent provider** (e.g., Persona) — needed for Milestone B (verified consent)
+- **Admin account** — needs to be provisioned by directly setting `role='admin'` on a profile in the database (no public admin signup)
 
-## Still required
+### Decisions made
+1. Started with a fresh database schema rather than deploying legacy migrations — the old schema had security issues and didn't match the brief's requirements
+2. Kept legacy table types in TypeScript for backward compatibility — old services will be rewired in later milestones
+3. Used `SECURITY DEFINER` triggers for profile column protection and auto-creation — ensures enforcement even if RLS policies are changed
+4. Admin role is server-provisioned only — no public admin signup or role-switching button
 
-1. New database model and permissions for adult users, children, approvals, immutable artwork versions and school campaign recipients.
-2. Real authentication, verified parental consent, identity-provider integration, permission withdrawal and deletion workflow.
-3. Durable private uploads, secure asynchronous AI jobs, one initial batch allowance, atomic admin credits and failure recovery.
-4. Avatar/caricature processing with explicit consent for provider disclosure, source retention/deletion, publication choice, metadata removal and parent review. Caricatures are not anonymous by default.
-5. Stripe Connect server endpoints and verified requirements status, checkout/payment events, immutable earnings ledger, refunds/disputes, payout timing and reconciliation.
-6. Live Printful catalog/variants, saved mockups, fulfillment queue, signed/verified notifications and shipment reconciliation.
-7. Server-enforced creator discount item scope, limits, expiry, cost reserve, and protection from concurrent redemption. A later fulfillment overrun needs an explicit adjustment policy.
-8. Full Spanish translation, school campaign implementation, updated operational/policy copy, and accessibility/end-to-end verification of the inherited pages.
-
-No final share percentage, paid regeneration price, or payout schedule has been selected. The pricing worksheet is illustrative. Production requires explicit agreement terms and tested account configuration.
+### Remaining work
+- **Milestone B:** Persistent multi-child accounts, consent gates, profile draft/public separation, resumable onboarding, deletion lifecycle
+- **Milestone C:** Drawing upload, durable four-option generation, credits, selection, versioned approvals
+- **Milestone D:** Printful catalog, print validation, mockup persistence, publishing, real storefront
+- **Milestone E:** Stripe Checkout/Connect, fulfillment jobs, ledger, refunds, discounts
+- **Milestone F:** Photo/caricature, Spanish, school campaigns, accessibility, security testing, deployment

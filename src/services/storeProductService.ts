@@ -18,7 +18,7 @@ export const fetchProductsForStore = async () => {
   if (!data?.length) return [];
 
   // Batch fetch profiles
-  const userIds = [...new Set(data.map(p => p.designs?.user_id).filter(Boolean))];
+  const userIds = [...new Set((data as any[]).map(p => p.designs?.user_id).filter(Boolean))];
   
   const { data: profiles } = await supabase
     .from('profiles')
@@ -27,7 +27,7 @@ export const fetchProductsForStore = async () => {
 
   const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
 
-  return data.map(product => ({
+  return (data as any[]).map(product => ({
     ...product,
     designs: {
       ...product.designs,

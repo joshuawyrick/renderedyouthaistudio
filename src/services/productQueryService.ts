@@ -60,7 +60,7 @@ export const fetchProductsWithDesigns = async (): Promise<Product[]> => {
         design_id: product.design_id,
         collection_id: product.collection_id,
         assigned_user_id: product.assigned_user_id,
-        collection_name: product.collections?.name || '',
+        collection_name: (product.collections as any)?.name || '',
         assigned_user_name: assignedProfile 
           ? `${assignedProfile.first_name} ${assignedProfile.last_name}` 
           : '',

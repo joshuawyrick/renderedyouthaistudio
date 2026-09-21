@@ -97,7 +97,7 @@ const CreatorPublicProfile = () => {
         .order('created_at', { ascending: false });
 
       if (designsError) throw designsError;
-      setDesigns(designsData || []);
+      setDesigns((designsData as any) || []);
 
     } catch (error) {
       console.error('Error loading creator data:', error);

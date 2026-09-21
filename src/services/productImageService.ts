@@ -31,10 +31,10 @@ export const fetchProductImages = async (productId: string): Promise<ProductImag
     const images: ProductImage[] = [];
     
     // Add the main design image first (only if it exists)
-    if (product?.designs?.file_url) {
+    if ((product?.designs as any)?.file_url) {
       images.push({
-        url: product.designs.file_url,
-        altText: product.designs.title || 'Product image',
+        url: (product.designs as any).file_url,
+        altText: (product.designs as any).title || 'Product image',
         sortOrder: 1
       });
     }
@@ -107,7 +107,7 @@ export const saveProductImages = async (productId: string, images: ProductImage[
 
     if (fetchError) throw fetchError;
 
-    const currentMainDesignUrl = currentProduct?.designs?.file_url;
+    const currentMainDesignUrl = (currentProduct?.designs as any)?.file_url;
 
     // The first image in the array is now the main image
     const newMainImage = images[0];

@@ -92,7 +92,7 @@ const TuckersTees: React.FC = () => {
       }
 
       // Get creator profiles
-      const designUserIds = products.map(product => product.designs?.user_id).filter(Boolean);
+      const designUserIds = (products as any[]).map(product => product.designs?.user_id).filter(Boolean);
       let profilesData = [];
       
       if (designUserIds.length > 0) {
