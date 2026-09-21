@@ -1,0 +1,1 @@
+UPDATE public.collections SET slug = '4th-of-july' WHERE slug = '4th-of-july-';
