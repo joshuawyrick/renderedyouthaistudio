@@ -167,6 +167,7 @@ function Submit() {
   const [title, setTitle] = useState(''); const [story, setStory] = useState('');
   const [checked, check] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState('');
   const [cameraActive, setCameraActive] = useState(false);
@@ -282,6 +283,7 @@ function Submit() {
       admin_credits: 0,
       history: [] as any,
       drawing_url: drawingPath,
+      logo_styles: selectedStyles,
     });
     setSubmitting(false);
     if (result.error) return;
@@ -338,6 +340,27 @@ function Submit() {
 
     <Field label="Give the design a name"><input value={title} required maxLength={80} onChange={e => setTitle(e.target.value)} placeholder="Rocket dreams" /></Field>
     <Field label="What&#39;s the story behind it?"><textarea required maxLength={1000} value={story} onChange={e => setStory(e.target.value)} placeholder="Tell us what your artist drew and why it matters to them." /></Field>
+    <div className="studio-style-picker">
+      <div className="studio-style-picker-header">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Paintbrush size={20} /><strong>Logo styles</strong></div>
+        <span className="studio-muted" style={{ fontSize: '14px' }}>{selectedStyles.length > 0 ? `${selectedStyles.length} style${selectedStyles.length === 1 ? '' : 's'} selected` : 'None selected \u2014 we\u2019ll use our defaults'}</span>
+        <div style={{ display: 'flex', gap: '12px', fontSize: '14px' }}>
+          <button type="button" className="studio-link" style={{ background: 'none', border: 'none', cursor: 'pointer' }} onClick={() => setSelectedStyles(LOGO_STYLES.map(s => s.id))}>Select all</button>
+          <button type="button" className="studio-link" style={{ background: 'none', border: 'none', cursor: 'pointer' }} onClick={() => setSelectedStyles([])}>Clear</button>
+        </div>
+      </div>
+      <p className="studio-muted" style={{ margin: '0 0 12px' }}>Pick styles that match how you want the shirt to look. The AI will blend your picks together.</p>
+      <div className="studio-style-grid">
+        {LOGO_STYLES.map(s => {
+          const active = selectedStyles.includes(s.id);
+          return <label key={s.id} className={`studio-style-chip ${active ? 'active' : ''}`}>
+            <input type="checkbox" checked={active} onChange={() => setSelectedStyles(prev => active ? prev.filter(id => id !== s.id) : [...prev, s.id])} style={{ display: 'none' }} />
+            <strong>{s.name}</strong>
+            <span>{s.description}</span>
+          </label>;
+        })}
+      </div>
+    </div>
     <label className="studio-check"><input required type="checkbox" checked={checked} onChange={e => check(e.target.checked)} />I&#39;ve reviewed the story and would approve it for the artist&#39;s shop.</label>
     <Button disabled={!checked || !title.trim() || !story.trim() || submitting}>{submitting ? 'Saving…' : 'Save drawing & continue'} <ArrowRight size={16} /></Button>
     <p className="studio-muted">One initial set of four options. More generations require approval.</p>
@@ -377,6 +400,9 @@ function DesignDetail({ id }: { id: string }) {
       setGenerating(false);
       setPolling(false);
       fetchMockups(id).then(m => { if (m) setMockups(m); });
+      if (d.stage === 'generating') {
+        updateDesign(id, { stage: 'choose', completed_batches: (d.completed_batches ?? 0) + 1 } as any);
+      }
     } else if (status === 'failed') {
       setGenerating(false);
       setPolling(false);
