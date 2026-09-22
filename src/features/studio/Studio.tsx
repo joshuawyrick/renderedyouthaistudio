@@ -284,16 +284,16 @@ function Submit() {
     <div className="studio-upload-area">
       {!imageDataUrl && !cameraActive && (
         <div className="studio-upload-choices">
-          <div className="studio-upload-choice" role="button" tabIndex={0} onClick={startCamera} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); startCamera(); } }}>
+          <button type="button" className="studio-upload-choice" onClick={startCamera}>
             <Camera size={32} />
             <strong>Take a photo</strong>
             <p>Use your phone or laptop camera to capture the drawing.</p>
-          </div>
-          <div className="studio-upload-choice" role="button" tabIndex={0} onClick={() => fileInputRef.current?.click()} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInputRef.current?.click(); } }}>
+          </button>
+          <button type="button" className="studio-upload-choice" onClick={() => fileInputRef.current?.click()}>
             <Upload size={32} />
             <strong>Upload an image</strong>
             <p>Choose a photo from your device. On a phone, you can pick from your photos or take a new one.</p>
-          </div>
+          </button>
         </div>
       )}
 
@@ -669,12 +669,12 @@ function CreatorSubmit() {
     <div className="studio-upload-area">
       {!imageDataUrl && !cameraActive && (
         <div className="studio-upload-choices">
-          <div className="studio-upload-choice" role="button" tabIndex={0} onClick={startCamera} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); startCamera(); } }}>
+          <button type="button" className="studio-upload-choice" onClick={startCamera}>
             <Camera size={32} /><strong>Take a photo</strong><p>Use your phone or laptop camera to capture the drawing.</p>
-          </div>
-          <div className="studio-upload-choice" role="button" tabIndex={0} onClick={() => fileInputRef.current?.click()} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInputRef.current?.click(); } }}>
+          </button>
+          <button type="button" className="studio-upload-choice" onClick={() => fileInputRef.current?.click()}>
             <Upload size={32} /><strong>Upload an image</strong><p>Choose a photo from your device. On a phone, you can pick from your photos or take a new one.</p>
-          </div>
+          </button>
         </div>
       )}
       {cameraActive && (
