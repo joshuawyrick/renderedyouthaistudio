@@ -34,6 +34,9 @@ export function splitEarnings(input: { revenue: number; costs: number; shareBps:
   if (creatorDiscount > beforeDiscount) throw new Error('This discount exceeds the creator earnings available for this sale.');
   return { creator: beforeDiscount - creatorDiscount, platform: margin - beforeDiscount, maxDiscount: beforeDiscount, loss: Math.max(0, costs - revenue) };
 }
+const DELETABLE_STAGES: readonly Stage[] = ['draft', 'generating', 'choose', 'changes'];
+export function canDeleteDesign(stage: Stage): boolean { return DELETABLE_STAGES.includes(stage); }
+
 export const stageLabels: Record<Stage, string> = {
   draft: 'Draft', generating: 'Creating four options', choose: 'Choose your artwork', review: 'Admin review', changes: 'Changes requested',
   mockup: 'Preparing your shirt', parent_approval: 'Approve your product', ready: 'Ready to publish', published: 'Live in your shop',

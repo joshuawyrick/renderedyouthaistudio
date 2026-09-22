@@ -173,6 +173,7 @@ export type Database = {
           collection_id: string | null
           subcollection_id: string | null
           logo_styles: string[]
+          archived_at: string | null
         }
         Insert: {
           id?: string
@@ -207,6 +208,7 @@ export type Database = {
           collection_id?: string | null
           subcollection_id?: string | null
           logo_styles?: string[]
+          archived_at?: string | null
         }
         Update: {
           title?: string
@@ -236,6 +238,7 @@ export type Database = {
           collection_id?: string | null
           subcollection_id?: string | null
           logo_styles?: string[]
+          archived_at?: string | null
         }
         Relationships: []
       }

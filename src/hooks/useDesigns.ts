@@ -49,5 +49,28 @@ export function useDesigns() {
     return { error: null, data: data as Design };
   }, []);
 
-  return { designs, loading, addDesign, updateDesign, reload: load };
+  const deleteDesign = useCallback(async (id: string) => {
+    const { error: mockupsErr } = await supabase.from('design_mockups').delete().eq('design_id', id);
+    if (mockupsErr) return { error: mockupsErr.message };
+    const { error } = await supabase.from('designs').delete().eq('id', id);
+    if (error) return { error: error.message };
+    setDesigns(prev => prev.filter(d => d.id !== id));
+    return { error: null };
+  }, []);
+
+  const archiveDesign = useCallback(async (id: string) => {
+    const { data, error } = await supabase.from('designs').update({ archived_at: new Date().toISOString() } as any).eq('id', id).select().single();
+    if (error) return { error: error.message };
+    if (data) setDesigns(prev => prev.map(d => d.id === id ? data as Design : d));
+    return { error: null };
+  }, []);
+
+  const unarchiveDesign = useCallback(async (id: string) => {
+    const { data, error } = await supabase.from('designs').update({ archived_at: null } as any).eq('id', id).select().single();
+    if (error) return { error: error.message };
+    if (data) setDesigns(prev => prev.map(d => d.id === id ? data as Design : d));
+    return { error: null };
+  }, []);
+
+  return { designs, loading, addDesign, updateDesign, deleteDesign, archiveDesign, unarchiveDesign, reload: load };
 }

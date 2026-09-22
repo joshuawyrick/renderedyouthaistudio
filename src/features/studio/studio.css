@@ -237,6 +237,53 @@
 .studio-row > span:first-child { flex: 1; min-width: 140px; }
 .studio-row small { display: block; color: #777; margin-top: 6px; }
 
+/* ===== Row wrapper for delete/archive buttons ===== */
+.studio-row-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid #eee;
+}
+.studio-row-wrapper .studio-row {
+  flex: 1;
+  border-bottom: none;
+}
+.studio-row-wrapper.archived { opacity: 0.6; }
+.studio-row-wrapper.archived:hover { opacity: 0.85; }
+.studio-row-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  color: #999;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+.studio-row-action:hover { color: #c00; background: #fff0f0; }
+
+/* ===== Confirmation overlay ===== */
+.studio-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+.studio-confirm {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+.studio-confirm h2 { font-size: 20px; margin: 0 0 12px; }
+.studio-confirm p { color: #555; font-size: 15px; line-height: 1.5; margin: 0 0 20px; }
+
 /* ===== Badge ===== */
 .studio-badge {
   display: inline-block;
