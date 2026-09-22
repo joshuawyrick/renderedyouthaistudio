@@ -1,6 +1,6 @@
 import React from 'react';
 import { RYCard } from '@/components/ui/ry-card';
-import { sanitizeText } from '@/services/securityService';
+
 import { Sparkles } from 'lucide-react';
 
 export interface DesignVision {
@@ -42,9 +42,8 @@ interface DesignVisionFieldsProps {
  */
 const DesignVisionFields = ({ vision, setVision, disabled }: DesignVisionFieldsProps) => {
   const update = (field: keyof DesignVision) => (value: string) => {
-    const clean = sanitizeText(value);
-    if (clean.length <= LIMITS[field]) {
-      setVision({ ...vision, [field]: clean });
+    if (value.length <= LIMITS[field]) {
+      setVision({ ...vision, [field]: value });
     }
   };
 

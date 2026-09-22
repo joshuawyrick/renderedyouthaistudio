@@ -3,7 +3,7 @@ import React from 'react';
 import { RYCard } from '@/components/ui/ry-card';
 import { RYButton } from '@/components/ui/ry-button';
 import { useSecureFileUpload } from '@/hooks/useSecureFileUpload';
-import { sanitizeText } from '@/services/securityService';
+
 import FileUploadZone from './FileUploadZone';
 import DesignVisionFields, { DesignVision } from './DesignVisionFields';
 
@@ -41,9 +41,9 @@ const SecureUploadForm = ({
   const { uploading } = useSecureFileUpload();
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const sanitizedTitle = sanitizeText(e.target.value);
-    if (sanitizedTitle.length <= 100) { // Enforce length limit
-      setTitle(sanitizedTitle);
+    const val = e.target.value;
+    if (val.length <= 100) {
+      setTitle(val);
     }
   };
 
