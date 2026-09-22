@@ -71,11 +71,7 @@ const App = () => (
             <Route path="/parent/*" element={<Studio />} />
             <Route path="/creator/*" element={<Studio />} />
             <Route path="/schools" element={<Studio />} />
-            <Route path="/creator/dashboard" element={<Navigate to="/parent" replace />} />
-            <Route path="/creator/upload" element={<Navigate to="/parent/submit" replace />} />
-            <Route path="/creator/profile" element={<Navigate to="/parent/artists" replace />} />
-            <Route path="/creator/submitted" element={<Navigate to="/parent/designs" replace />} />
-            <Route path="/creator/:creatorId" element={<CreatorPublicProfile />} />
+            <Route path="/creators/:creatorId" element={<CreatorPublicProfile />} />
             <Route path="/parent-verify" element={<Navigate to="/onboarding/parent" replace />} />
             <Route path="/design-review" element={<Navigate to="/parent/designs" replace />} />
             <Route path="/auth" element={<Navigate to="/start" replace />} />
