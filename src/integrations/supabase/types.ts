@@ -172,6 +172,7 @@ export type Database = {
           ai_generation_count: number | null
           collection_id: string | null
           subcollection_id: string | null
+          logo_styles: string[]
         }
         Insert: {
           id?: string
@@ -205,6 +206,7 @@ export type Database = {
           ai_generation_count?: number | null
           collection_id?: string | null
           subcollection_id?: string | null
+          logo_styles?: string[]
         }
         Update: {
           title?: string
@@ -233,6 +235,7 @@ export type Database = {
           ai_generation_count?: number | null
           collection_id?: string | null
           subcollection_id?: string | null
+          logo_styles?: string[]
         }
         Relationships: []
       }
