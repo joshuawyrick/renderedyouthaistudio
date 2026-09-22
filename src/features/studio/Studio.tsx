@@ -72,10 +72,17 @@ export default function Studio() {
   else if (pathname === '/parent/sharing') body = <Sharing />;
   else body = <Overview />;
   return <><TopNav /><div className="studio">
-    <div className="studio-workspace">
-      {workspace && <aside className="studio-sidebar"><p className="studio-eyebrow">{admin ? 'RENDERED YOUTH ADMIN' : isCreator ? 'YOUR CREATOR STUDIO' : 'YOUR FAMILY STUDIO'}</p><nav aria-label="Workspace">{nav.map(([url, title, Icon]) => <Link key={String(url)} className={pathname === url ? 'active' : ''} to={String(url)}>{React.createElement(Icon as typeof Users, { size: 18 })}{String(title)}</Link>)}</nav>{!admin && <Link className="studio-button" to={isCreator ? '/creator/submit' : '/parent/submit'}>Submit a drawing <ArrowRight size={16} /></Link>}<button className="studio-link" onClick={() => auth.signOut()} style={{ marginTop: '20px', background: 'none', border: 'none', cursor: 'pointer' }}><LogOut size={16} /> Sign out</button></aside>}
-      <main className="studio-main">{body}</main>
-    </div></div><Footer /></>;
+    {workspace ? (
+      <div className="studio-workspace">
+        <aside className="studio-sidebar"><p className="studio-eyebrow">{admin ? 'RENDERED YOUTH ADMIN' : isCreator ? 'YOUR CREATOR STUDIO' : 'YOUR FAMILY STUDIO'}</p><nav aria-label="Workspace">{nav.map(([url, title, Icon]) => <Link key={String(url)} className={pathname === url ? 'active' : ''} to={String(url)}>{React.createElement(Icon as typeof Users, { size: 18 })}{String(title)}</Link>)}</nav>{!admin && <Link className="studio-button" to={isCreator ? '/creator/submit' : '/parent/submit'}>Submit a drawing <ArrowRight size={16} /></Link>}<button className="studio-link" onClick={() => auth.signOut()} style={{ marginTop: '20px', background: 'none', border: 'none', cursor: 'pointer' }}><LogOut size={16} /> Sign out</button></aside>
+        <main className="studio-main">{body}</main>
+      </div>
+    ) : (
+      <div className="studio-centered">
+        <main className="studio-main">{body}</main>
+      </div>
+    )}
+  </div><Footer /></>;
 }
 
 function Start() {
