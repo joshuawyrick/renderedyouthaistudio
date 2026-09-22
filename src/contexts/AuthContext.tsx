@@ -10,7 +10,7 @@ type AuthContextValue = {
   profile: Profile | null;
   loading: boolean;
   error: AuthError | null;
-  signUp: (email: string, password: string, displayName: string) => Promise<{ error: AuthError | null }>;
+  signUp: (email: string, password: string, displayName: string, accountType?: 'parent' | 'independent_creator') => Promise<{ error: AuthError | null }>;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
   updateProfile: (patch: Partial<Database['public']['Tables']['profiles']['Update']>) => Promise<{ error: AuthError | null }>;
@@ -65,12 +65,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => listener.subscription.unsubscribe();
   }, [loadProfile]);
 
-  const signUp = useCallback(async (email: string, password: string, displayName: string) => {
+  const signUp = useCallback(async (email: string, password: string, displayName: string, accountType?: 'parent' | 'independent_creator') => {
     setError(null);
     const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { display_name: displayName } },
+      options: { data: { display_name: displayName, account_type: accountType ?? 'parent' } },
     });
     if (signUpError) return { error: { message: signUpError.message } };
     return { error: null };

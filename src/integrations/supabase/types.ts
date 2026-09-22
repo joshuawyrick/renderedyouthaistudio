@@ -15,9 +15,10 @@ export type Database = {
       profiles: {
         Row: {
           id: string
-          role: 'parent' | 'admin'
+          role: 'parent' | 'admin' | 'independent_creator'
           display_name: string
-          onboarding_step: 'account' | 'consent' | 'artists' | 'complete'
+          onboarding_step: 'account' | 'age' | 'profile' | 'consent' | 'artists' | 'complete'
+          birth_date: string | null
           consent_accepted: boolean
           payout_ready: boolean
           created_at: string
@@ -44,11 +45,12 @@ export type Database = {
         }
         Insert: {
           id: string
-          role?: 'parent' | 'admin'
+          role?: 'parent' | 'admin' | 'independent_creator'
           display_name?: string
-          onboarding_step?: 'account' | 'consent' | 'artists' | 'complete'
+          onboarding_step?: 'account' | 'age' | 'profile' | 'consent' | 'artists' | 'complete'
           consent_accepted?: boolean
           payout_ready?: boolean
+          birth_date?: string | null
           // Legacy insert columns
           first_name?: string | null
           last_name?: string | null
@@ -71,8 +73,9 @@ export type Database = {
         }
         Update: {
           display_name?: string
-          onboarding_step?: 'account' | 'consent' | 'artists' | 'complete'
+          onboarding_step?: 'account' | 'age' | 'profile' | 'consent' | 'artists' | 'complete'
           consent_accepted?: boolean
+          birth_date?: string | null
           // Legacy update columns
           first_name?: string | null
           last_name?: string | null
@@ -149,6 +152,7 @@ export type Database = {
           admin_note: string | null
           variants_ready: boolean
           history: Json
+          drawing_url: string | null
           created_at: string
           updated_at: string
           // Legacy columns referenced by existing services
@@ -183,6 +187,7 @@ export type Database = {
           admin_note?: string | null
           variants_ready?: boolean
           history?: Json
+          drawing_url?: string | null
           // Legacy insert columns
           status?: string | null
           user_id?: string
@@ -211,6 +216,7 @@ export type Database = {
           request_note?: string | null
           admin_note?: string | null
           variants_ready?: boolean
+          drawing_url?: string | null
           // Legacy update columns
           status?: string | null
           file_url?: string

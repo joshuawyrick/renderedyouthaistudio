@@ -69,6 +69,7 @@ const App = () => (
             <Route path="/start" element={<Studio />} />
             <Route path="/onboarding/*" element={<Studio />} />
             <Route path="/parent/*" element={<Studio />} />
+            <Route path="/creator/*" element={<Studio />} />
             <Route path="/schools" element={<Studio />} />
             <Route path="/creator/dashboard" element={<Navigate to="/parent" replace />} />
             <Route path="/creator/upload" element={<Navigate to="/parent/submit" replace />} />

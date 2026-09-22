@@ -53,3 +53,25 @@ export const fetchAiStatus = async (
     error: data.ai_error ?? null,
   };
 };
+
+export interface Mockup {
+  id: string;
+  mockup_url: string;
+  mockup_order: number;
+  style_key: string;
+  style_label: string;
+}
+
+/** Fetch the AI-generated mockups for a design. */
+export const fetchMockups = async (
+  designId: string,
+): Promise<Mockup[] | null> => {
+  const { data, error } = await supabase
+    .from('design_mockups')
+    .select('id, mockup_url, mockup_order, style_key, style_label')
+    .eq('design_id', designId)
+    .order('mockup_order', { ascending: true });
+
+  if (error || !data) return null;
+  return data as Mockup[];
+};
